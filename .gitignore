@@ -1,0 +1,14 @@
+# Python 기본 무시 파일
+__pycache__/
+*.py[cod]
+
+# Poetry / 가상 환경
+.venv/
+dist/
+
+# 환경 변수 (보안)
+.env
+
+# IDE 설정 파일 (나만의 설정이므로 공유 X)
+.vscode/
+.idea/

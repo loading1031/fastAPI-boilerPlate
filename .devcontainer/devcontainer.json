@@ -1,0 +1,33 @@
+{
+  "name": "FastAPI Agent Dev",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  
+  // 컨테이너가 생성된 후 자동으로 실행할 명령어입니다.
+  // Poetry가 의존성을 설치하여 .venv를 만듭니다.
+  "postCreateCommand": "poetry install",
+
+  // VS Code 설정 (컨테이너 내부)
+  "customizations": {
+    "vscode": {
+      "settings": {
+        // VS Code에게 Python 인터프리터 위치를 강제로 알려줍니다.
+        "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+        "python.terminal.activateEnvironment": true
+      },
+      "extensions": [
+        // Python 개발에 필수적인 확장 프로그램 자동 설치
+        "ms-python.python",
+        "njpwerner.autodocstring",
+        "tamasfe.even-better-toml" 
+      ]
+    }
+  },
+
+  // FastAPI 기본 포트(8000)를 로컬 컴퓨터와 연결합니다.
+  "forwardPorts": [8000],
+
+  // 컨테이너 사용자를 'vscode'로 설정 (보안 및 권한 문제 방지)
+  "remoteUser": "vscode"
+}
