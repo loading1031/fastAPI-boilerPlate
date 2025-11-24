@@ -1,9 +1,14 @@
 {
   "name": "FastAPI Agent Dev",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
+  // 💡 1. 사용할 docker-compose 파일 지정
+  "dockerComposeFile": "docker-compose.yml",
   
+  // 💡 2. docker-compose.yml 내에서 빌드하고 실행할 서비스 이름 지정
+  "service": "agent-dev", 
+
+  // 💡 3. VS Code가 작업 공간으로 사용할 서비스 내부의 경로를 지정
+  "workspaceFolder": "/workspaces/agent",
+
   // 컨테이너가 생성된 후 자동으로 실행할 명령어입니다.
   // Poetry가 의존성을 설치하여 .venv를 만듭니다.
   "postCreateCommand": "poetry install",

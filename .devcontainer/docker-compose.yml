@@ -1,0 +1,12 @@
+# docker-compose.yml
+services:
+  agent-dev:
+    build: .
+    image: fastapi-agent:1 # 💡 이미지를 직접 명시
+    volumes:
+      - ..:/workspaces/agent:cached
+
+    
+    # 💡 이 두 줄을 추가하여 대화식 쉘을 유지합니다.
+    stdin_open: true # 표준 입력을 엽니다.
+    tty: true        # TTY (터미널)을 할당합니다
