@@ -1,0 +1,27 @@
+# cli1: kubectl apply -f=deployment.yaml
+# cli2: kubectl get deployments
+# cli3: kubectl get pods
+# cli4: kubectl describe pod {pod-name} // maybe need to check logs
+
+apiVersion: apps/v1
+kind: Deployment # Service, job etc.
+metadata:
+  name: second-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: second-app
+      tier: backend # app &&(not ||) tier must match
+
+  template: # Pod template
+    metadata:
+      labels:
+        app: second-app
+        tier: backend
+    spec:
+      containers:
+        - name: second-node
+          image: tinywhale1031/fastapi-agent:1
+          ports:
+            - containerPort: 80
