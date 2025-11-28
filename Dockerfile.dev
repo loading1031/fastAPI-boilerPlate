@@ -1,0 +1,57 @@
+# ----------------------------------
+# 1. 빌드 스테이지 (Builder Stage)
+# ----------------------------------
+# 공식 Python + Poetry 이미지를 사용합니다.
+FROM python:3.12 as builder
+# 주의: 공식 이미지 태그는 'python:3.12'과 같이 지정해야 Poetry가 설치되어 있습니다.
+# (Poetry 공식 이미지는 내부적으로 python 이미지를 사용합니다.)
+
+WORKDIR /app
+
+# Poetry 설치
+RUN pip install poetry
+
+# 환경 변수 설정
+ENV PATH="/root/.local/bin:$PATH" \
+    POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_CREATE=false \
+    POETRY_CACHE_DIR='/tmp/poetry_cache'
+
+# 1-1. 의존성 파일 복사
+COPY pyproject.toml poetry.lock ./
+
+# # 1-2. 의존성 설치
+# # Poetry가 제공하는 환경에서 의존성만 설치합니다.
+# # 설치된 패키지는 /usr/local/lib/python3.12/site-packages에 설치됩니다.
+RUN poetry install --only main --no-ansi --no-root
+
+# ----------------------------------
+# 2. 최종 실행 스테이지 (Final / Production Stage)
+# ----------------------------------
+# 최종 실행 환경은 최소한의 파일만 포함하는 slim 이미지를 사용합니다.
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# 2-1. 의존성 복사
+# # 설치된 패키지 코드 (import 용)는 /usr/local/lib/python3.12/site-packages 입니다.
+COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+# Gunicorn/Uvicorn 등 실행 명령어(Executable)는 /usr/local/bin 에 위치합니다.
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# 2-2. 애플리케이션 코드 복사
+COPY app/ .
+
+# 2-3. 포트 노출
+EXPOSE 80
+
+# 2-4. 서버 실행 명령어 (Gunicorn + Uvicorn Worker)
+# 'app.main:app'은 프로젝트 구조에 맞게 수정하세요.
+CMD ["gunicorn", "main:app", "--bind", "0.0.0.0:80", "-w", "4", "-k", "uvicorn.workers.UvicornWorker"]
+
+# ----------------------------------
+# build and run
+# ----------------------------------
+# docker build -f Dockerfile.dev -t {repository}/fastapi-agent:1 .
+# docker run  -p 8000:80 {repository}/fastapi-agent:1 
+# docker push {repository}/fastapi-agent:1

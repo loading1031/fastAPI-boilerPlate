@@ -1,0 +1,15 @@
+services:
+  fastapi-agent:
+    build: 
+      context: . # Dockerfile.dev가 있는 위치
+      dockerfile: Dockerfile.dev # 사용할 Dockerfile 명시
+    image: tinywhale1031/fastapi-agent:1
+    ports:
+      - "8000:80"
+    # image 키를 제거합니다.
+
+# ----------------------------------
+# build and run
+# ----------------------------------
+# docker-compose -f docker-compose.dev.yml up
+# docker push {repository}/fastapi-agent:1
