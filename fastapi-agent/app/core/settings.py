@@ -9,8 +9,8 @@ class Settings:
     
     # 💡 Docker Compose에서 주입받은 OLLAMA_BASE_URL을 사용
     # 기본값은 로컬 테스트용으로만 남겨둡니다.
-    OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-    OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "qwen2.5")
+    LLM_URL: str = os.getenv("LLM_URL", "http://localhost:11434")
+    LLM_MODEL: str = os.getenv("LLM_MODEL", "qwen3-vl:8B")
     APP_ENV: str = os.getenv("APP_ENV", "development")
 
 settings = Settings()
