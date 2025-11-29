@@ -11,7 +11,9 @@ requires-python = ">=3.12, <4.0.0"
 dependencies = [
     "fastapi[standard] (>=0.121.3,<0.122.0)",
     "langchain (>=1.0.8,<2.0.0)",
-    "gunicorn (>=23.0.0,<24.0.0)"
+    "gunicorn (>=23.0.0,<24.0.0)",
+    "langchain-ollama (>=1.0.0,<2.0.0)",
+    "ollama (>=0.6.1,<0.7.0)"
 ]
 
 
@@ -21,3 +23,13 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 package-mode = false
+[dependency-groups]
+dev = [
+    "mypy (>=1.19.0,<2.0.0)"
+]
+
+[tool.mypy]
+# 💡 'app' 폴더를 분석 대상 패키지로 지정
+packages = ["app"] 
+# 💡 Pydantic 플러그인 사용 (권장)
+plugins = ["pydantic.mypy"]

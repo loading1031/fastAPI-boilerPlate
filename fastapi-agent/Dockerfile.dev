@@ -31,7 +31,7 @@ RUN poetry install --only main --no-ansi --no-root
 # 최종 실행 환경은 최소한의 파일만 포함하는 slim 이미지를 사용합니다.
 FROM python:3.12-slim
 
-WORKDIR /app
+WORKDIR /workspace
 
 # 2-1. 의존성 복사
 # # 설치된 패키지 코드 (import 용)는 /usr/local/lib/python3.12/site-packages 입니다.
@@ -40,14 +40,14 @@ COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/pytho
 COPY --from=builder /usr/local/bin /usr/local/bin
 
 # 2-2. 애플리케이션 코드 복사
-COPY app/ .
+COPY app/ ./app/
 
 # 2-3. 포트 노출
 EXPOSE 80
 
 # 2-4. 서버 실행 명령어 (Gunicorn + Uvicorn Worker)
 # 'app.main:app'은 프로젝트 구조에 맞게 수정하세요.
-CMD ["gunicorn", "main:app", "--bind", "0.0.0.0:80", "-w", "4", "-k", "uvicorn.workers.UvicornWorker"]
+CMD ["gunicorn", "app.main:app", "--bind", "0.0.0.0:80", "-w", "4", "-k", "uvicorn.workers.UvicornWorker"]
 
 # ----------------------------------
 # build and run

@@ -3,10 +3,31 @@ services:
     build: 
       context: . # Dockerfile.dev가 있는 위치
       dockerfile: Dockerfile.dev # 사용할 Dockerfile 명시
-    image: tinywhale1031/fastapi-agent:1
+    image: tinywhale1031/fastapi-agent:2
+    env_file:
+      - .env
+    depends_on:
+      - model-server
     ports:
       - "8000:80"
     # image 키를 제거합니다.
+
+  model-server:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama
+    entrypoint: ["/bin/bash", "-c"]
+    command: 
+      - |
+        ollama serve & 
+        wait
+    ports:
+      - "11434:11434"
+    environment:
+        - OLLAMA_HOST=0.0.0.0
+
+volumes:
+  ollama_data: # named volume 정의
 
 # ----------------------------------
 # build and run
